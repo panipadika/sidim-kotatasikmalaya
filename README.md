@@ -1,10 +1,10 @@
 # Dashboard Indikator Makro Kota Tasikmalaya
 
-Aplikasi web Sistem Informasi Dashboard Indikator Makro untuk pemantauan, visualisasi, dan analisis indikator capaian pembangunan daerah (Bappelitbangda Kota Tasikmalaya).
+Aplikasi web Sistem Informasi Dashboard Indikator Makro untuk pemantauan, visualisasi, dan analisis indikator capaian pembangunan daerah (Bapperida Kota Tasikmalaya).
 
 ---
 
-## 🌟 Fitur Utama
+## Fitur Utama
 
 - **Dashboard Makro Interaktif**:
   - Ringkasan indikator makro utama (IPM, Pertumbuhan Ekonomi, Kemiskinan, Pengangguran Terbuka, Gini Ratio, dll).
@@ -30,7 +30,7 @@ Aplikasi web Sistem Informasi Dashboard Indikator Makro untuk pemantauan, visual
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Backend Framework**: [Laravel 10](https://laravel.com) (PHP 8.1+)
 - **Database**: MySQL / MariaDB (Didukung SQLite untuk automated testing)
@@ -41,7 +41,7 @@ Aplikasi web Sistem Informasi Dashboard Indikator Makro untuk pemantauan, visual
 
 ---
 
-## 🚀 Panduan Instalasi Lokal
+##  Panduan Instalasi Lokal
 
 ### 1. Clone Repository
 ```bash
@@ -88,7 +88,7 @@ Akses aplikasi melalui browser di `http://127.0.0.1:8000`.
 
 ---
 
-## 🧪 Menjalankan Automated Test
+## Menjalankan Automated Test
 Aplikasi telah dilengkapi dengan unit dan feature test menyeluruh untuk memastikan semua endpoint, autentikasi, kalkulasi analisis, import Excel, dan CRUD bekerja tanpa kendala:
 ```bash
 php artisan test
