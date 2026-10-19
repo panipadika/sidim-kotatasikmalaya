@@ -481,6 +481,8 @@
 
                 @if ($errors->any())
                     <div class="error-box">{{ $errors->first() }}</div>
+                @elseif (session('error'))
+                    <div class="error-box">{{ session('error') }}</div>
                 @endif
 
                 <form method="POST" action="{{ route('public.register.submit') }}" data-register-form>
@@ -519,6 +521,18 @@
         const registerForm = document.querySelector('[data-register-form]');
         const registerLoading = document.querySelector('[data-register-loading]');
         const registerSubmit = document.querySelector('[data-register-submit]');
+
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted) {
+                window.location.reload();
+            } else {
+                if (registerSubmit) {
+                    registerSubmit.disabled = false;
+                    registerSubmit.textContent = 'Daftar Akun';
+                }
+                registerLoading?.classList.remove('is-active');
+            }
+        });
 
         registerForm?.addEventListener('submit', function () {
             registerLoading?.classList.add('is-active');

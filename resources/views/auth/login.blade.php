@@ -238,6 +238,17 @@
             font-weight: 500;
         }
 
+        .status-box {
+            background: #f8fbf9;
+            color: var(--primary-dark);
+            border: 1px solid #d4e5da;
+            border-radius: 8px;
+            padding: 8px 11px;
+            margin-bottom: 11px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
         .field-error {
             color: var(--danger);
             font-size: 0.74rem;
@@ -500,6 +511,16 @@
                     <div class="error-box">
                         {{ $errors->first() }}
                     </div>
+                @elseif (session('error'))
+                    <div class="error-box">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                @if (session('status'))
+                    <div class="status-box">
+                        {{ session('status') }}
+                    </div>
                 @endif
 
                 <form method="POST" action="{{ route('login.submit') }}" autocomplete="off" data-login-form>
@@ -535,6 +556,18 @@
             field.addEventListener('focus', function () {
                 field.removeAttribute('readonly');
             }, { once: true });
+        });
+
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted) {
+                window.location.reload();
+            } else {
+                if (loginSubmit) {
+                    loginSubmit.disabled = false;
+                    loginSubmit.textContent = 'Masuk Admin';
+                }
+                loginLoading?.classList.remove('is-active');
+            }
         });
 
         loginForm?.addEventListener('submit', function () {

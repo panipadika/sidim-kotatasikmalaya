@@ -567,6 +567,10 @@
                     <div class="error-box">
                         {{ $errors->first() }}
                     </div>
+                @elseif (session('error'))
+                    <div class="error-box">
+                        {{ session('error') }}
+                    </div>
                 @endif
 
                 @if (session('status'))
@@ -614,6 +618,18 @@
             field.addEventListener('focus', function () {
                 field.removeAttribute('readonly');
             }, { once: true });
+        });
+
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted) {
+                window.location.reload();
+            } else {
+                if (loginSubmit) {
+                    loginSubmit.disabled = false;
+                    loginSubmit.textContent = 'Masuk';
+                }
+                loginLoading?.classList.remove('is-active');
+            }
         });
 
         loginForm?.addEventListener('submit', function () {
