@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
         :root {
             --primary: #1f6b45;
@@ -174,6 +175,46 @@
             box-shadow: 0 0 0 3px rgba(31, 107, 69, 0.12);
             outline: none;
             background: #fff;
+        }
+
+        .input-password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .input-password-wrapper input {
+            padding-right: 40px !important;
+        }
+
+        .toggle-pass-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            font-size: 1.05rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            border-radius: 6px;
+            transition: color .15s ease, background-color .15s ease;
+            z-index: 2;
+        }
+
+        .toggle-pass-btn:hover {
+            color: var(--primary-dark);
+            background-color: rgba(31, 107, 69, .08);
+        }
+
+        .toggle-pass-btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 1px;
         }
 
         .btn {
@@ -650,7 +691,12 @@
 
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input id="password" type="password" name="password" autocomplete="new-password" required @if (!$errors->any()) readonly data-autofill-guard @endif>
+                        <div class="input-password-wrapper">
+                            <input id="password" type="password" name="password" autocomplete="new-password" required @if (!$errors->any()) readonly data-autofill-guard @endif>
+                            <button type="button" class="toggle-pass-btn" data-toggle-target="password" title="Lihat password" aria-label="Lihat password">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
                         @error('password')
                             <span class="field-error">{{ $message }}</span>
                         @enderror
@@ -697,6 +743,35 @@
                 loginSubmit.disabled = true;
                 loginSubmit.textContent = 'Memuat...';
             }
+        });
+
+        document.querySelectorAll('[data-toggle-target]').forEach(function (button) {
+            button.addEventListener('click', function () {
+                const targetId = button.getAttribute('data-toggle-target');
+                const input = document.getElementById(targetId);
+                if (!input) return;
+
+                if (input.hasAttribute('readonly')) {
+                    input.removeAttribute('readonly');
+                }
+
+                const icon = button.querySelector('i');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    if (icon) {
+                        icon.className = 'bi bi-eye-slash';
+                    }
+                    button.title = 'Sembunyikan password';
+                    button.setAttribute('aria-label', 'Sembunyikan password');
+                } else {
+                    input.type = 'password';
+                    if (icon) {
+                        icon.className = 'bi bi-eye';
+                    }
+                    button.title = 'Lihat password';
+                    button.setAttribute('aria-label', 'Lihat password');
+                }
+            });
         });
     </script>
 </body>
