@@ -323,14 +323,18 @@
 
         @media (max-width: 900px) {
             .page {
-                padding: 20px 16px;
+                padding: 24px 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             .login-layout {
                 grid-template-columns: 1fr;
-                gap: 16px;
-                max-width: 420px;
+                gap: 20px;
+                max-width: 440px;
                 margin: 0 auto;
+                width: 100%;
             }
 
             .brand-panel {
@@ -338,25 +342,47 @@
                 text-align: center;
                 transform: none;
                 margin: 0 auto;
+                width: 100%;
             }
 
             .brand {
                 justify-content: center;
-                margin-bottom: 10px;
+                margin-bottom: 12px;
             }
 
             .brand-panel h2 {
                 text-align: center;
-                font-size: clamp(1.25rem, 3.5vw, 1.65rem);
-                margin-bottom: 4px;
-                line-height: 1.2;
+                font-size: clamp(1.35rem, 3.8vw, 1.75rem);
+                margin-bottom: 6px;
+                line-height: 1.25;
             }
 
             .brand-panel p {
                 text-align: center;
                 margin: 0 auto;
-                font-size: .84rem;
-                max-width: 380px;
+                font-size: .86rem;
+                max-width: 400px;
+            }
+
+            .login-box {
+                margin: 0 auto;
+                width: 100%;
+            }
+
+            .login-heading {
+                text-align: center;
+            }
+
+            .login-heading h1 {
+                text-align: center;
+            }
+
+            .subtitle {
+                text-align: center;
+            }
+
+            .error-box, .status-box {
+                text-align: center;
             }
         }
 
@@ -366,114 +392,145 @@
             }
 
             .page {
-                padding: 16px 14px 20px;
+                padding: 24px 16px;
                 min-height: 100vh;
                 min-height: 100dvh;
-                align-items: flex-start;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             .login-layout {
-                gap: 12px;
+                gap: 18px;
                 max-width: 100%;
+                width: 100%;
+                margin: 0 auto;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
             }
 
             .brand-panel {
                 transform: none;
                 padding: 0 4px;
+                text-align: center;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
 
             .brand {
-                margin-bottom: 8px;
+                margin-bottom: 10px;
+                justify-content: center;
             }
 
             .brand-mark {
-                width: 48px;
-                height: 48px;
-                border-radius: 12px;
+                width: 56px;
+                height: 56px;
+                border-radius: 14px;
                 box-shadow: 0 4px 12px rgba(7, 59, 42, 0.08);
             }
 
             .brand-mark img {
-                width: 36px;
-                height: 36px;
+                width: 40px;
+                height: 40px;
             }
 
             .brand-panel h2 {
-                font-size: clamp(1.1rem, 4.5vw, 1.3rem);
-                line-height: 1.25;
+                font-size: clamp(1.15rem, 4.8vw, 1.4rem);
+                line-height: 1.28;
                 letter-spacing: -.02em;
-                margin-bottom: 3px;
-            }
-
-            .brand-panel h2 br {
-                display: none;
+                margin-bottom: 6px;
+                text-align: center;
             }
 
             .brand-panel p {
-                font-size: 0.76rem;
-                line-height: 1.38;
-                max-width: 320px;
+                font-size: 0.8rem;
+                line-height: 1.45;
+                max-width: 330px;
+                margin: 0 auto;
+                text-align: center;
             }
 
             .login-box {
-                padding: 18px 16px 16px;
-                border-radius: 14px;
-                box-shadow: 0 8px 24px rgba(7, 59, 42, .07);
+                padding: 20px 20px 18px;
+                border-radius: 18px;
+                box-shadow: 0 10px 30px rgba(7, 59, 42, .08);
+                width: 100%;
+                max-width: 390px;
+                margin: 0 auto;
             }
 
             .login-heading {
-                margin-bottom: 10px;
+                margin-bottom: 12px;
+                text-align: center;
             }
 
             .login-heading h1 {
-                font-size: 1.2rem;
+                font-size: 1.3rem;
+                text-align: center;
+                margin-bottom: 4px;
             }
 
             .subtitle {
-                font-size: 0.76rem;
-                margin-bottom: 10px;
-                line-height: 1.35;
+                font-size: 0.78rem;
+                margin-bottom: 12px;
+                line-height: 1.4;
+                text-align: center;
+            }
+
+            .error-box, .status-box {
+                text-align: center;
+                font-size: 0.8rem;
             }
 
             .form-group {
-                margin-bottom: 9px;
+                margin-bottom: 11px;
+                text-align: left;
             }
 
             label {
-                font-size: 0.76rem;
-                margin-bottom: 2px;
+                font-size: 0.78rem;
+                margin-bottom: 3px;
+                display: block;
             }
 
             input {
                 font-size: 16px; /* Mencegah auto-zoom di iOS Safari */
-                padding: 8px 11px;
-                border-radius: 8px;
-                height: 38px;
+                padding: 9px 12px;
+                border-radius: 9px;
+                height: 40px;
             }
 
             .btn {
-                padding: 9px 12px;
-                font-size: 0.88rem;
-                height: 38px;
-                border-radius: 8px;
+                padding: 10px 14px;
+                font-size: 0.9rem;
+                height: 42px;
+                border-radius: 10px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
         }
 
         @media (max-width: 380px) {
             .page {
-                padding: 12px 10px 18px;
+                padding: 16px 12px;
             }
 
             .login-box {
-                padding: 14px 12px 12px;
+                padding: 16px 14px 14px;
             }
 
             .brand-panel h2 {
-                font-size: 1.05rem;
+                font-size: 1.1rem;
             }
 
             .login-heading h1 {
-                font-size: 1.12rem;
+                font-size: 1.15rem;
             }
         }
     </style>
@@ -497,7 +554,7 @@
                         <img src="{{ asset('logo.png') }}" alt="Logo Bapperida">
                     </div>
                 </div>
-                <h2>Dashboard Data Indikator<br>Pembangunan Kota Tasikmalaya</h2>
+                <h2>Dashboard Data Indikator Pembangunan<br>Kota Tasikmalaya</h2>
                 <p>Portal informasi indikator pembangunan Kota Tasikmalaya untuk pengelolaan data yang terarah dan terpercaya.</p>
             </section>
 
