@@ -37,7 +37,21 @@ class IndikatorDetailTest extends TestCase
             ->assertSee('Tahap I')
             ->assertSee('Data capaian')
             ->assertSee('Data target')
-            ->assertSee('>2<', false);
+            ->assertSee('>2<', false)
+            ->assertSee('Riwayat capaian dan target tahunan 2005 - 2025.');
+    }
+
+    public function test_indicator_chart_only_spans_available_data_years(): void
+    {
+        $indicator = Indikator::create(['nama_indikator' => 'Harapan Lama Sekolah', 'satuan' => 'Tahun', 'jenis' => 'subindikator']);
+        Capaian::create(['indikator_id' => $indicator->id, 'tahun' => 2016, 'nilai' => 13.40]);
+        Capaian::create(['indikator_id' => $indicator->id, 'tahun' => 2025, 'nilai' => 13.51]);
+        Target::create(['indikator_id' => $indicator->id, 'jenis_target' => 'RPJMD', 'tahun' => 2024, 'nilai_target' => 13.52]);
+
+        $response = $this->get(route('indikator.show', $indicator))->assertOk();
+        $response->assertSee('Riwayat capaian dan target tahunan 2016 - 2025.');
+        $response->assertSee('[2016,2017,2018,2019,2020,2021,2022,2023,2024,2025]', false);
+        $response->assertDontSee('[2005,', false);
     }
 
     public function test_detail_shows_empty_messages_when_data_is_missing(): void

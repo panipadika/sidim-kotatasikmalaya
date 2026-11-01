@@ -101,7 +101,21 @@ class IndikatorController extends Controller
                 'target' => $targetByYear->get($capaian->tahun),
             ];
         });
-        $chartYears = range(2005, 2025);
+        $capaianYears = $indikator->capaians->pluck('tahun')->filter();
+        $targetYears = $targetByYear->keys();
+        $allYears = $capaianYears->merge($targetYears)->unique()->sort()->values();
+
+        if ($allYears->isNotEmpty()) {
+            $minYear = (int) $allYears->first();
+            $maxYear = (int) $allYears->last();
+            $chartYears = range($minYear, $maxYear);
+            $chartSubtitle = $minYear === $maxYear
+                ? "Riwayat capaian dan target tahunan {$minYear}."
+                : "Riwayat capaian dan target tahunan {$minYear} - {$maxYear}.";
+        } else {
+            $chartYears = [];
+            $chartSubtitle = 'Riwayat capaian dan target tahunan.';
+        }
 
         $allIndicators = Indikator::query()
             ->orderBy('nama_indikator')
@@ -111,6 +125,7 @@ class IndikatorController extends Controller
             'indikator' => $indikator,
             'riwayat' => $riwayat,
             'chartLabels' => $chartYears,
+            'chartSubtitle' => $chartSubtitle,
             'allIndicators' => $allIndicators,
             'capaianData' => collect($chartYears)->map(fn (int $year) =>
                 $capaianByYear->get($year)?->nilai !== null ? (float) $capaianByYear->get($year)->nilai : null

@@ -423,10 +423,10 @@
     <section class="chart-card section-card">
         <div class="card-heading">
             <h2>Grafik Perkembangan Indikator</h2>
-            <p>Riwayat capaian dan target tahunan 2005 - 2025.</p>
+            <p>{{ $chartSubtitle }}</p>
         </div>
         <div class="chart-body">
-            @if ($indikator->capaians->isNotEmpty())
+            @if (!empty($chartLabels))
                 <div class="chart-container">
                     <canvas id="indikatorDetailChart"></canvas>
                 </div>
@@ -510,7 +510,7 @@
     </section>
 </div>
 
-@if ($indikator->capaians->isNotEmpty())
+@if (!empty($chartLabels))
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     new Chart(document.getElementById('indikatorDetailChart'), {
