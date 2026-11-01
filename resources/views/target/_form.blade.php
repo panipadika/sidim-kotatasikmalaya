@@ -4,7 +4,7 @@
 @endphp
 <style>
     .target-form { width: 100%; max-width: 860px; margin: 0 auto; background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; }
-    .form-header { padding: 24px 28px 20px; border-bottom: 1px solid #e6edf4; background: linear-gradient(110deg, #fffaf0 0%, #f4faff 100%); }
+    .form-header { padding: 24px 28px 20px; border-bottom: 1px solid #e6edf4; background: linear-gradient(110deg, #fffaf0 0%, #f0f9f4 100%); }
     .form-header h1 { margin: 0 0 6px; font-size: 1.5rem; letter-spacing: -.03em; }
     .form-header p { margin: 0; color: var(--text-soft); font-size: .86rem; line-height: 1.5; }
     .form-content { padding: 26px 28px 24px; }
@@ -14,14 +14,14 @@
     label { font-size: .82rem; font-weight: 800; color: var(--text-main); }
     label span { color: var(--text-soft); font-weight: 400; }
     input, select, textarea { width: 100%; border: 1px solid #d8e2ee; border-radius: 9px; padding: 11px 12px; font: inherit; font-size: .86rem; color: var(--text-main); background: #fbfdff; transition: border-color .15s ease, box-shadow .15s ease, background .15s ease; }
-    input:focus, select:focus, textarea:focus { outline: 0; border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(14, 165, 233, .14); background: #fff; }
+    input:focus, select:focus, textarea:focus { outline: 0; border-color: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, .15); background: #fff; }
     textarea { resize: vertical; min-height: 96px; line-height: 1.5; }
     small { color: #b4232d; font-size: .76rem; }
     .form-actions { display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 24px; padding-top: 18px; border-top: 1px solid #e8eef4; }
     .form-actions a, .form-actions .cancel-btn { padding: 10px 13px; color: var(--text-soft); text-decoration: none; font-size: .84rem; font-weight: 700; background: transparent; border: 0; cursor: pointer; font-family: inherit; }
     .form-actions a:hover, .form-actions .cancel-btn:hover { color: var(--text-main); }
-    .submit-btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 0; border-radius: 9px; padding: 11px 16px; background: #38bdf8; color: #064e70; font-size: .84rem; font-weight: 800; cursor: pointer; box-shadow: 0 7px 14px rgba(14, 165, 233, .16); }
-    .submit-btn:hover { background: #7dd3fc; }
+    .submit-btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 0; border-radius: 9px; padding: 11px 16px; background: #10b981; color: #ffffff; font-size: .84rem; font-weight: 800; cursor: pointer; box-shadow: 0 7px 14px rgba(16, 185, 129, .2); }
+    .submit-btn:hover { background: #059669; }
     @media (max-width: 650px) {
         .form-grid { grid-template-columns: 1fr; }
         .field.full { grid-column: auto; }
@@ -64,13 +64,26 @@
 
             <div class="field">
                 <label for="jenis_target">Jenis target</label>
+                @php
+                    $defaultTypes = ['RPJMD', 'RKPD', 'RPJPD'];
+                    $currentJenis = old('jenis_target', $target->jenis_target ?? '');
+                    $isCustom = !empty($currentJenis) && !in_array($currentJenis, $defaultTypes, true);
+                    $selectedDropdownVal = $isCustom ? 'Lainnya' : $currentJenis;
+                @endphp
                 <select id="jenis_target" name="jenis_target" required>
                     <option value="">Pilih jenis target</option>
-                    @foreach(['RPJMD', 'RKPD', 'RPJPD'] as $jenis)
-                        <option value="{{ $jenis }}" @selected(old('jenis_target', $target->jenis_target ?? '') === $jenis)>{{ $jenis }}</option>
+                    @foreach($defaultTypes as $jenis)
+                        <option value="{{ $jenis }}" @selected($selectedDropdownVal === $jenis)>{{ $jenis }}</option>
                     @endforeach
+                    <option value="Lainnya" @selected($selectedDropdownVal === 'Lainnya')>Lainnya</option>
                 </select>
                 @error('jenis_target')<small>{{ $message }}</small>@enderror
+            </div>
+
+            <div class="field jenis-target-custom-field" style="{{ ($selectedDropdownVal === 'Lainnya') ? 'display: flex;' : 'display: none;' }}">
+                <label for="jenis_target_custom">Nama Jenis Target Baru</label>
+                <input type="text" id="jenis_target_custom" name="jenis_target_custom" value="{{ old('jenis_target_custom', $isCustom ? $currentJenis : '') }}" placeholder="Contoh: Renstra, SPM, dll." maxlength="50">
+                @error('jenis_target_custom')<small>{{ $message }}</small>@enderror
             </div>
 
             <div class="field">
@@ -107,17 +120,39 @@
 
 <script>
     (() => {
-        const indicatorSelect = document.getElementById('indikator_id');
-        const unitInput = document.getElementById('satuan');
+        const scripts = document.getElementsByTagName('script');
+        const currentScript = scripts[scripts.length - 1];
+        const container = currentScript.closest('form') || currentScript.closest('.target-form');
+        if (!container) return;
 
-        if (!indicatorSelect || !unitInput) return;
+        const indicatorSelect = container.querySelector('select[name="indikator_id"]');
+        const unitInput = container.querySelector('#satuan, input[name="satuan"]');
 
-        const syncUnit = () => {
-            const selected = indicatorSelect.selectedOptions[0];
-            unitInput.value = selected?.dataset.satuan || '';
-        };
+        if (indicatorSelect && unitInput) {
+            const syncUnit = () => {
+                const selected = indicatorSelect.selectedOptions[0];
+                unitInput.value = selected?.dataset.satuan || '';
+            };
 
-        indicatorSelect.addEventListener('change', syncUnit);
-        syncUnit();
+            indicatorSelect.addEventListener('change', syncUnit);
+            syncUnit();
+        }
+
+        const jenisSelect = container.querySelector('select[name="jenis_target"]');
+        const customField = container.querySelector('.jenis-target-custom-field');
+        const customInput = container.querySelector('#jenis_target_custom');
+
+        if (jenisSelect && customField && customInput) {
+            const syncCustomField = (shouldFocus = false) => {
+                const isCustom = jenisSelect.value === 'Lainnya';
+                customField.style.display = isCustom ? 'flex' : 'none';
+                customInput.required = isCustom;
+                if (isCustom && shouldFocus) {
+                    setTimeout(() => customInput.focus(), 50);
+                }
+            };
+            jenisSelect.addEventListener('change', () => syncCustomField(true));
+            syncCustomField(false);
+        }
     })();
 </script>

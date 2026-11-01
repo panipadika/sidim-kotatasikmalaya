@@ -56,5 +56,38 @@ class AnalisisGrowthProjectionTest extends TestCase
         $response->assertSee('Proyeksi');
         $response->assertSee('Rata-rata Pertumbuhan');
         $response->assertSee('2026');
+        $response->assertSee('suggestedMin: yMin', false);
+        $response->assertSee('suggestedMax: yMax', false);
+        $response->assertDontSee('Math.min(0, ...growthValues, -10)', false);
+    }
+
+    public function test_percentage_unit_indicator_uses_percentage_point_growth(): void
+    {
+        $admin = \App\Models\Admin::create([
+            'name' => 'Admin',
+            'username' => 'admin_test',
+            'password' => \Illuminate\Support\Facades\Hash::make('admin12345'),
+        ]);
+        $this->actingAs($admin, 'admin');
+
+        $indicator = Indikator::create([
+            'nama_indikator' => 'Laju Pertumbuhan Penduduk',
+            'satuan' => '%',
+            'jenis' => 'utama',
+        ]);
+
+        Capaian::create(['indikator_id' => $indicator->id, 'tahun' => 2019, 'nilai' => 0.12]);
+        Capaian::create(['indikator_id' => $indicator->id, 'tahun' => 2020, 'nilai' => 1.27]);
+
+        $response = $this->get(route('analisis.index', [
+            'indikator' => $indicator->id,
+            'tahun_mulai' => 2019,
+            'tahun_akhir' => 2020,
+        ]))->assertOk();
+
+        // Must display percentage points, NOT relative growth 958.33%
+        $response->assertDontSee('958,33');
+        $response->assertSee('1,15% poin');
+        $response->assertSee('Pertumbuhan (% poin)');
     }
 }

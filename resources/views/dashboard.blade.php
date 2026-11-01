@@ -11,13 +11,94 @@
 <style>
     .dashboard-page { width: 100%; height: 100%; min-width: 0; overflow-y: auto; padding: 0; display: flex; flex-direction: column; }
     .dashboard-head, .indicator-panel, .rail-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 4px 16px rgba(15, 39, 71, 0.05); }
-    .dashboard-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 10px 14px; margin-bottom: 8px; background: linear-gradient(110deg, #fffef7 0%, #f1f8ff 100%); }
-    .eyebrow { display: inline-flex; align-items: center; gap: 5px; margin-bottom: 2px; color: #0284c7; font-size: .62rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .dashboard-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 10px 14px; margin-bottom: 8px; background: linear-gradient(110deg, #fffef7 0%, #f0f7f3 100%); }
+    .eyebrow { display: inline-flex; align-items: center; gap: 5px; margin-bottom: 2px; color: #10b981; font-size: .62rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
     .dashboard-head h1 { margin: 0 0 2px; font-size: 1.15rem; letter-spacing: -.02em; }
     .dashboard-head p { margin: 0; color: var(--text-soft); font-size: .72rem; }
-    .year-filter { display: flex; align-items: center; gap: 6px; padding: 3px 6px 3px 8px; border: 1px solid #d8e2ee; border-radius: 7px; background: rgba(255,255,255,.9); white-space: nowrap; }
-    .year-filter label { color: var(--text-soft); font-size: .68rem; font-weight: 700; }
-    .year-filter select { min-width: 82px; border: 0; border-radius: 5px; padding: 4px 6px; color: var(--text-main); background: #eaf3ff; font: inherit; font-size: .74rem; font-weight: 700; white-space: nowrap; }
+    .year-filter { position: relative; display: flex; align-items: center; gap: 6px; padding: 2px 4px 2px 8px; border: 1px solid #d8e2ee; border-radius: 8px; background: rgba(255,255,255,.95); white-space: nowrap; box-shadow: 0 1px 2px rgba(15,23,42,0.04); }
+    .year-filter label { color: var(--text-soft); font-size: .68rem; font-weight: 700; margin-right: 2px; }
+    .year-select-container { position: relative; }
+    .year-select-trigger {
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        min-width: 84px;
+        height: 28px;
+        padding: 0 8px;
+        border: 1px solid #a7f3d0;
+        border-radius: 6px;
+        background: #ecfdf5;
+        color: #065f46;
+        font: inherit;
+        font-size: .76rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all .15s ease;
+    }
+    .year-select-trigger:focus, .year-select-container.is-open .year-select-trigger {
+        outline: 0;
+        border-color: #10b981;
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, .2);
+    }
+    .year-select-trigger .arrow-icon {
+        font-size: .62rem;
+        color: #10b981;
+        transition: transform .2s ease;
+    }
+    .year-select-container.is-open .arrow-icon {
+        transform: rotate(180deg);
+    }
+    .year-select-menu {
+        position: absolute;
+        top: calc(100% + 4px);
+        right: 0;
+        min-width: 130px;
+        max-height: 240px;
+        overflow-y: auto;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        box-shadow: 0 10px 25px rgba(15, 39, 71, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
+        z-index: 1000;
+        display: none;
+        padding: 4px;
+    }
+    .year-select-container.is-open .year-select-menu {
+        display: block;
+        animation: dropFade .15s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .year-select-option {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 8px;
+        border: 0;
+        border-radius: 5px;
+        background: transparent;
+        color: var(--text-main);
+        font: inherit;
+        font-size: .74rem;
+        font-weight: 500;
+        cursor: pointer;
+        text-align: left;
+        transition: background .12s ease, color .12s ease;
+    }
+    .year-select-option:hover {
+        background: #ecfdf5;
+        color: #065f46;
+    }
+    .year-select-option.is-selected {
+        background: #d1fae5;
+        color: #065f46;
+        font-weight: 700;
+    }
+    .year-select-option .check-icon {
+        color: #10b981;
+        font-size: .8rem;
+    }
+    @keyframes dropFade { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
     .dashboard-layout { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(210px, .72fr); gap: 10px; align-items: stretch; flex: 1; min-height: 0; }
     .indicator-panel { padding: 10px 12px; height: 100%; display: flex; flex-direction: column; }
     .section-title { display: flex; align-items: center; justify-content: space-between; margin: 0 2px 6px; }
@@ -68,8 +149,8 @@
         width: 22px;
         height: 22px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
-        color: #0369a1;
+        background: linear-gradient(135deg, #e8f8f0 0%, #d1fae5 100%);
+        color: #10b981;
         font-size: .62rem;
     }
     .indicator-card:nth-child(3n+2) .indicator-icon {
@@ -124,23 +205,25 @@
         margin-top: 5px;
         padding: 4px 10px;
         border-radius: 6px;
-        background: #eaf3ff;
-        color: #0f67b8;
+        background: #ecfdf5;
+        color: #10b981;
+        border: 1px solid #a7f3d0;
         font-size: .62rem;
         font-weight: 800;
         line-height: 1;
         text-decoration: none;
-        transition: background .15s ease, color .15s ease, transform .15s ease;
+        transition: background .15s ease, color .15s ease, transform .15s ease, border-color .15s ease;
     }
     .detail-link:hover {
-        background: #dceeff;
-        color: #0b4d8d;
+        background: #10b981;
+        color: #ffffff;
+        border-color: #10b981;
         transform: translateY(-1px);
     }
     .dashboard-rail { display: grid; grid-template-rows: 1fr 1fr; gap: 8px; height: 100%; }
     .rail-card { padding: 10px; min-height: 0; display: flex; flex-direction: column; }
     .rail-card.database { background: linear-gradient(160deg, #fffdf5 0%, #fff8e3 55%, #ffffff 100%); }
-    .rail-card.summary { background: linear-gradient(160deg, #eaf6ff 0%, #f7fbff 100%); }
+    .rail-card.summary { background: linear-gradient(160deg, #f0f9f4 0%, #ffffff 100%); }
     .rail-card.database .rail-button { margin-top: auto; }
     .analysis-invite { display: flex; align-items: flex-start; gap: 7px; margin: 3px 0 5px; padding: 6px 8px; border-radius: 7px; background: rgba(255,255,255,.78); }
     .analysis-invite-icon { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; flex: 0 0 24px; border-radius: 6px; background: #ffcb56; color: #6b4b00; font-size: .7rem; }
@@ -155,10 +238,10 @@
     .rail-button:hover { background: #eab13a; color: #4a3500; }
     .summary-list { display: grid; gap: 4px; margin-top: 5px; }
     .summary-row { display: flex; align-items: center; gap: 7px; padding: 5px 8px; border: 1px solid #edf1f5; border-radius: 6px; background: #f8fafc; font-size: .66rem; }
-    .summary-row-icon { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; flex: 0 0 22px; border-radius: 5px; background: #e7f5ff; color: #1682bd; font-size: .68rem; }
-    .summary-row:nth-child(2) .summary-row-icon { background: #e8fff5; color: #15966a; }
+    .summary-row-icon { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; flex: 0 0 22px; border-radius: 5px; background: #ecfdf5; color: #10b981; font-size: .68rem; }
+    .summary-row:nth-child(2) .summary-row-icon { background: #d1fae5; color: #059669; }
     .summary-row:nth-child(3) .summary-row-icon { background: #fff4d2; color: #a87908; }
-    .summary-row:nth-child(4) .summary-row-icon { background: #f0ebff; color: #7655c7; }
+    .summary-row:nth-child(4) .summary-row-icon { background: #ecfdf5; color: #047857; }
     .summary-row span { color: var(--text-soft); }
     .summary-row strong { margin-left: auto; color: var(--text-main); font-size: .8rem; }
     @media (max-width: 900px) {
@@ -294,14 +377,27 @@
             <h1>Dashboard Makro Kota Tasikmalaya</h1>
             <p>Ringkasan indikator pembangunan Kota Tasikmalaya.</p>
         </div>
-        <form class="year-filter" method="GET" action="{{ $dashboardRoute }}">
-            <label for="tahun">Tahun</label>
-            <select id="tahun" name="tahun" onchange="this.form.submit()">
-                <option value="">Pilih tahun</option>
-                @foreach($years as $year)
-                    <option value="{{ $year }}" @selected($tahun === $year)>{{ $year }}</option>
-                @endforeach
-            </select>
+        <form class="year-filter" method="GET" action="{{ $dashboardRoute }}" id="dashboard-year-form">
+            <label for="tahun-trigger">Tahun</label>
+            <input type="hidden" name="tahun" id="tahun-input" value="{{ $tahun }}">
+            <div class="year-select-container" id="dashboard-year-dropdown">
+                <button type="button" class="year-select-trigger" id="tahun-trigger" aria-haspopup="listbox" aria-expanded="false">
+                    <span>{{ $tahun ?: 'Pilih tahun' }}</span>
+                    <i class="bi bi-chevron-down arrow-icon"></i>
+                </button>
+                <div class="year-select-menu" role="listbox">
+                    <button type="button" class="year-select-option {{ empty($tahun) ? 'is-selected' : '' }}" data-value="">
+                        <span>Pilih tahun</span>
+                        @if(empty($tahun)) <i class="bi bi-check2 check-icon"></i> @endif
+                    </button>
+                    @foreach($years as $year)
+                        <button type="button" class="year-select-option {{ (string)$tahun === (string)$year ? 'is-selected' : '' }}" data-value="{{ $year }}">
+                            <span>{{ $year }}</span>
+                            @if((string)$tahun === (string)$year) <i class="bi bi-check2 check-icon"></i> @endif
+                        </button>
+                    @endforeach
+                </div>
+            </div>
         </form>
     </div>
 
@@ -388,4 +484,45 @@
         </aside>
     </div>
 </div>
+<script>
+    (() => {
+        const container = document.getElementById('dashboard-year-dropdown');
+        if (!container) return;
+        const trigger = container.querySelector('.year-select-trigger');
+        const hiddenInput = document.getElementById('tahun-input');
+        const form = document.getElementById('dashboard-year-form');
+
+        const toggleDropdown = (open) => {
+            const isOpen = open ?? !container.classList.contains('is-open');
+            container.classList.toggle('is-open', isOpen);
+            trigger.setAttribute('aria-expanded', String(isOpen));
+        };
+
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleDropdown();
+        });
+
+        container.querySelectorAll('.year-select-option').forEach((opt) => {
+            opt.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const val = opt.getAttribute('data-value');
+                hiddenInput.value = val;
+                toggleDropdown(false);
+                form.submit();
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!container.contains(e.target)) toggleDropdown(false);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && container.classList.contains('is-open')) {
+                toggleDropdown(false);
+                trigger.focus();
+            }
+        });
+    })();
+</script>
 @endsection

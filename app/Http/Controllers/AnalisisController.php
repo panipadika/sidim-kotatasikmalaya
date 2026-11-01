@@ -87,8 +87,8 @@ class AnalisisController extends Controller
             }
         }
 
-        $growthData = $this->buildGrowthData($capaians);
-        $projectionData = $this->buildProjectionData($capaians, $targetByYear, $tahunAkhir);
+        $growthData = $this->buildGrowthData($capaians, $selectedIndikator);
+        $projectionData = $this->buildProjectionData($capaians, $targetByYear, $tahunAkhir, $selectedIndikator);
 
         $stats = [
             'nilaiAwal' => null,
@@ -124,7 +124,10 @@ class AnalisisController extends Controller
 
             if ($nilaiAwal !== null && $nilaiAkhir !== null) {
                 $stats['perubahan'] = $nilaiAkhir - $nilaiAwal;
-                $stats['persenPerubahan'] = $nilaiAwal != 0 ? (($nilaiAkhir - $nilaiAwal) / $nilaiAwal) * 100 : null;
+                $isPercentageUnit = $selectedIndikator && trim((string) $selectedIndikator->satuan) === '%';
+                $stats['persenPerubahan'] = $isPercentageUnit
+                    ? $stats['perubahan']
+                    : ($nilaiAwal != 0 ? (($nilaiAkhir - $nilaiAwal) / abs($nilaiAwal)) * 100 : null);
                 $stats['status'] = $stats['perubahan'] > 0 ? 'Meningkat' : ($stats['perubahan'] < 0 ? 'Menurun' : 'Stabil');
             }
         }
@@ -166,8 +169,10 @@ class AnalisisController extends Controller
         ]);
     }
 
-    private function buildGrowthData($capaians): array
+    private function buildGrowthData($capaians, ?Indikator $selectedIndikator = null): array
     {
+        $isPercentageUnit = $selectedIndikator && trim((string) $selectedIndikator->satuan) === '%';
+        $unit = $isPercentageUnit ? '% poin' : '%';
         $rows = [];
         $previousValue = null;
 
@@ -176,8 +181,12 @@ class AnalisisController extends Controller
             $perubahan = $previousValue !== null && $nilai !== null ? $nilai - $previousValue : null;
             $pertumbuhan = null;
 
-            if ($nilai !== null && $previousValue !== null && $previousValue != 0) {
-                $pertumbuhan = (($nilai - $previousValue) / $previousValue) * 100;
+            if ($nilai !== null && $previousValue !== null) {
+                if ($isPercentageUnit) {
+                    $pertumbuhan = $perubahan;
+                } elseif ($previousValue != 0) {
+                    $pertumbuhan = (($nilai - $previousValue) / abs($previousValue)) * 100;
+                }
             }
 
             $rows[] = [
@@ -197,6 +206,8 @@ class AnalisisController extends Controller
         if (empty($growthValues)) {
             return [
                 'rows' => $rows,
+                'unit' => $unit,
+                'isPercentageUnit' => $isPercentageUnit,
                 'average' => null,
                 'highest' => null,
                 'highestYear' => null,
@@ -217,6 +228,8 @@ class AnalisisController extends Controller
 
         return [
             'rows' => $rows,
+            'unit' => $unit,
+            'isPercentageUnit' => $isPercentageUnit,
             'average' => array_sum($growthValues) / count($growthValues),
             'highest' => $highestValue,
             'highestYear' => $highestEntry['tahun'] ?? null,
@@ -255,13 +268,16 @@ class AnalisisController extends Controller
         return 'Fluktuatif';
     }
 
-    private function buildProjectionData($capaians, $targetByYear, int $tahunAkhir): array
+    private function buildProjectionData($capaians, $targetByYear, int $tahunAkhir, ?Indikator $selectedIndikator = null): array
     {
+        $isPercentageUnit = $selectedIndikator && trim((string) $selectedIndikator->satuan) === '%';
+        $unit = $isPercentageUnit ? '% poin' : '%';
         $actualSeries = $capaians->filter(fn ($item) => $item->nilai !== null)->values();
 
         if ($actualSeries->count() < 2) {
             return [
                 'rows' => [],
+                'unit' => $unit,
                 'summary' => [
                     'firstYear' => null,
                     'firstValue' => null,
@@ -269,6 +285,7 @@ class AnalisisController extends Controller
                     'lastValue' => null,
                     'change' => null,
                     'growth' => null,
+                    'unit' => $unit,
                     'status' => 'Belum cukup data',
                 ],
                 'combinedLabels' => [],
@@ -314,10 +331,12 @@ class AnalisisController extends Controller
                 : $projectedValue - $latestActualValue;
             $growth = null;
 
-            if ($previousProjectionValue !== null && $previousProjectionValue != 0) {
-                $growth = (($projectedValue - $previousProjectionValue) / $previousProjectionValue) * 100;
+            if ($isPercentageUnit) {
+                $growth = $change;
+            } elseif ($previousProjectionValue !== null && $previousProjectionValue != 0) {
+                $growth = (($projectedValue - $previousProjectionValue) / abs($previousProjectionValue)) * 100;
             } elseif ($latestActualValue != 0) {
-                $growth = (($projectedValue - $latestActualValue) / $latestActualValue) * 100;
+                $growth = (($projectedValue - $latestActualValue) / abs($latestActualValue)) * 100;
             }
 
             $targetValue = $targetByYear->get($year)?->nilai_target;
@@ -370,12 +389,18 @@ class AnalisisController extends Controller
             'lastYear' => $lastProjection['tahun'] ?? null,
             'lastValue' => $lastProjection['nilai'] ?? null,
             'change' => $firstProjection && $lastProjection ? $lastProjection['nilai'] - $firstProjection['nilai'] : null,
-            'growth' => $firstProjection && $firstProjection['nilai'] != 0 && $lastProjection ? (($lastProjection['nilai'] - $firstProjection['nilai']) / $firstProjection['nilai']) * 100 : null,
+            'growth' => $firstProjection && $lastProjection
+                ? ($isPercentageUnit
+                    ? $lastProjection['nilai'] - $firstProjection['nilai']
+                    : ($firstProjection['nilai'] != 0 ? (($lastProjection['nilai'] - $firstProjection['nilai']) / abs($firstProjection['nilai'])) * 100 : null))
+                : null,
+            'unit' => $unit,
             'status' => $lastProjection['status'] ?? 'Belum cukup data',
         ];
 
         return [
             'rows' => $rows,
+            'unit' => $unit,
             'summary' => $summary,
             'combinedLabels' => $combinedLabels,
             'combinedActual' => $combinedActual,

@@ -15,7 +15,7 @@
     .page-heading {
         padding: 18px 22px;
         margin-bottom: 16px;
-        background: linear-gradient(110deg, #ffffff 0%, #f4faff 100%);
+        background: linear-gradient(110deg, #ffffff 0%, #f0f9f4 100%);
         border: 1px solid var(--border);
         border-radius: 14px;
         box-shadow: var(--shadow);
@@ -27,9 +27,9 @@
         gap: 6px;
         font-size: .72rem;
         font-weight: 700;
-        color: #0369a1;
-        background: #e0f2fe;
-        border: 1px solid #bae6fd;
+        color: #047857;
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
         padding: 3px 9px;
         border-radius: 6px;
         margin-bottom: 6px;
@@ -97,8 +97,8 @@
     }
 
     .card-header-icon.blue {
-        background: #e0f2fe;
-        color: #0284c7;
+        background: #ecfdf5;
+        color: #10b981;
     }
 
     .card-header-icon.amber {
@@ -107,8 +107,8 @@
     }
 
     .card-header-icon.purple {
-        background: #f3e8ff;
-        color: #7e22ce;
+        background: #ecfdf5;
+        color: #10b981;
     }
 
     .card-header-title {
@@ -184,13 +184,13 @@
 
     .input-wrapper input:focus {
         outline: 0;
-        border-color: #38bdf8;
-        box-shadow: 0 0 0 3px rgba(14, 165, 233, .14);
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, .15);
         background: #ffffff;
     }
 
     .input-wrapper input:focus ~ .input-icon {
-        color: #0284c7;
+        color: #10b981;
     }
 
     .toggle-pass-btn {
@@ -258,15 +258,15 @@
     }
 
     .btn-primary-custom {
-        background: #0284c7;
+        background: #10b981;
         color: #ffffff;
-        box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+        box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
     }
 
     .btn-primary-custom:hover {
-        background: #0369a1;
+        background: #059669;
         transform: translateY(-1px);
-        box-shadow: 0 4px 10px rgba(2, 132, 199, 0.35);
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.35);
     }
 
     .btn-amber-custom {
@@ -282,15 +282,15 @@
     }
 
     .btn-purple-custom {
-        background: #7e22ce;
+        background: #10b981;
         color: #ffffff;
-        box-shadow: 0 2px 6px rgba(126, 34, 206, 0.25);
+        box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
     }
 
     .btn-purple-custom:hover {
-        background: #6b21a8;
+        background: #059669;
         transform: translateY(-1px);
-        box-shadow: 0 4px 10px rgba(126, 34, 206, 0.35);
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.35);
     }
 
     .btn-outline-secondary {
@@ -351,8 +351,8 @@
     /* URL Khusus Card Styles */
     .url-preview-card {
         padding: 14px 18px;
-        background: #faf5ff;
-        border: 1px solid #e9d5ff;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
         border-radius: 10px;
         margin-bottom: 16px;
         display: flex;
@@ -372,7 +372,7 @@
     .url-preview-card .url-label {
         font-size: .72rem;
         font-weight: 800;
-        color: #7e22ce;
+        color: #15803d;
         text-transform: uppercase;
         letter-spacing: .04em;
         display: flex;
@@ -384,7 +384,7 @@
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         font-size: .92rem;
         font-weight: 700;
-        color: #4c1d95;
+        color: #166534;
         word-break: break-all;
     }
 
@@ -393,8 +393,8 @@
         align-items: center;
         gap: 6px;
         background: #ffffff;
-        color: #7e22ce;
-        border: 1px solid #d8b4fe;
+        color: #15803d;
+        border: 1px solid #a7f3d0;
         border-radius: 8px;
         padding: 8px 14px;
         font-size: .8rem;
@@ -405,8 +405,8 @@
     }
 
     .btn-copy-url:hover {
-        background: #f3e8ff;
-        border-color: #c084fc;
+        background: #ecfdf5;
+        border-color: #10b981;
         transform: translateY(-1px);
     }
 
@@ -422,8 +422,8 @@
     }
 
     .url-input-group:focus-within {
-        border-color: #a855f7;
-        box-shadow: 0 0 0 3px rgba(168, 85, 247, .15);
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, .15);
         background: #fff;
     }
 

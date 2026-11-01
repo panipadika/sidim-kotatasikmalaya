@@ -16,7 +16,7 @@
     .page-heading {
         padding: 18px 22px;
         margin-bottom: 12px;
-        background: linear-gradient(110deg, #ffffff 0%, #f4faff 100%);
+        background: linear-gradient(110deg, #ffffff 0%, #f0f9f4 100%);
     }
 
     .heading-badge {
@@ -25,9 +25,9 @@
         gap: 6px;
         font-size: .72rem;
         font-weight: 700;
-        color: #0369a1;
-        background: #e0f2fe;
-        border: 1px solid #bae6fd;
+        color: #047857;
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
         padding: 3px 9px;
         border-radius: 6px;
         margin-bottom: 6px;
@@ -82,8 +82,8 @@
     }
 
     .stat-icon.blue {
-        background: #e0f2fe;
-        color: #0284c7;
+        background: #ecfdf5;
+        color: #10b981;
     }
 
     .stat-icon.green {
@@ -159,8 +159,8 @@
 
     .search-input-wrapper input:focus {
         outline: 0;
-        border-color: #38bdf8;
-        box-shadow: 0 0 0 3px rgba(14, 165, 233, .14);
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, .15);
         background: #fff;
     }
 
@@ -208,7 +208,7 @@
 
     .is-spinning {
         animation: spin .75s linear infinite;
-        color: #0284c7 !important;
+        color: #10b981 !important;
     }
 
     .search-actions {
@@ -263,7 +263,7 @@
     }
 
     .badge-total strong {
-        color: #0284c7;
+        color: #10b981;
         font-weight: 800;
     }
 
@@ -306,7 +306,7 @@
         width: 36px;
         height: 36px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         color: #ffffff;
         display: inline-flex;
         align-items: center;
@@ -314,7 +314,7 @@
         font-size: .88rem;
         font-weight: 800;
         flex-shrink: 0;
-        box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+        box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
     }
 
     .user-name {
@@ -346,9 +346,9 @@
         padding: 3px 10px;
         font-size: .72rem;
         font-weight: 700;
-        background: #e0f2fe;
-        color: #0369a1;
-        border: 1px solid #bae6fd;
+        background: #ecfdf5;
+        color: #047857;
+        border: 1px solid #a7f3d0;
     }
 
     .badge-date {

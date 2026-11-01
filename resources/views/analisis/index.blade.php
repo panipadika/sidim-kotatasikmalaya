@@ -12,7 +12,7 @@
 <style>
     .analysis-page { width: 100%; min-width: 0; overflow: auto; padding-bottom: 16px; }
     .analysis-head {
-        background: linear-gradient(110deg, #ffffff 0%, #f4faff 100%);
+        background: linear-gradient(110deg, #ffffff 0%, #f0f9f4 100%);
         border: 1px solid var(--border);
         border-radius: 12px;
         box-shadow: 0 4px 16px rgba(15, 39, 71, 0.05);
@@ -74,9 +74,96 @@
     }
     .field select:focus {
         outline: 0;
-        border-color: #38bdf8;
-        box-shadow: 0 0 0 3px rgba(14, 165, 233, .14);
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, .15);
     }
+    .custom-select-container { position: relative; width: 100%; min-width: 0; }
+    .custom-select-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        width: 100%;
+        height: 38px;
+        border: 1px solid #d8e2ee;
+        border-radius: 8px;
+        padding: 0 12px;
+        background: #ffffff;
+        color: var(--text-main);
+        font: inherit;
+        font-size: .82rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-align: left;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+        transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    .custom-select-trigger:focus, .custom-select-container.is-open .custom-select-trigger {
+        outline: 0;
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, .15);
+    }
+    .custom-select-label { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .custom-select-arrow { font-size: .68rem; color: #64748b; transition: transform .2s ease; flex-shrink: 0; }
+    .custom-select-container.is-open .custom-select-arrow { transform: rotate(180deg); color: #10b981; }
+    .custom-select-menu {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        min-width: 180px;
+        max-height: 280px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 9px;
+        box-shadow: 0 12px 30px rgba(15, 39, 71, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
+        z-index: 1000;
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    .custom-select-container.is-indikator .custom-select-menu { min-width: 280px; }
+    .custom-select-container.is-open .custom-select-menu { display: flex; animation: dropFade .15s cubic-bezier(0.16, 1, 0.3, 1); }
+    .custom-select-search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border-bottom: 1px solid #f1f5f9;
+        background: #f8fafc;
+    }
+    .custom-select-search i { color: #94a3b8; font-size: .75rem; }
+    .custom-select-search input {
+        border: 0;
+        outline: 0;
+        background: transparent;
+        font: inherit;
+        font-size: .78rem;
+        width: 100%;
+        color: var(--text-main);
+    }
+    .custom-select-options { overflow-y: auto; max-height: 230px; padding: 4px; }
+    .custom-select-option {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 7px 9px;
+        border: 0;
+        border-radius: 6px;
+        background: transparent;
+        font: inherit;
+        font-size: .79rem;
+        font-weight: 500;
+        color: var(--text-main);
+        cursor: pointer;
+        text-align: left;
+        transition: background-color .12s ease, color .12s ease;
+    }
+    .custom-select-option:hover { background-color: #ecfdf5; color: #065f46; }
+    .custom-select-option.is-selected { background-color: #d1fae5; color: #065f46; font-weight: 700; }
+    .custom-select-option .check-icon { color: #10b981; font-size: .85rem; flex-shrink: 0; }
     .filter-actions {
         display: flex;
         align-items: center;
@@ -100,16 +187,16 @@
         transition: all .15s ease;
     }
     .submit-btn {
-        background: #0284c7;
+        background: #10b981;
         color: #ffffff;
-        border: 1px solid #0284c7;
-        box-shadow: 0 2px 6px rgba(2, 132, 199, .2);
+        border: 1px solid #10b981;
+        box-shadow: 0 2px 6px rgba(16, 185, 129, .25);
     }
     .submit-btn:hover {
-        background: #0369a1;
-        border-color: #0369a1;
+        background: #059669;
+        border-color: #059669;
         transform: translateY(-1px);
-        box-shadow: 0 3px 8px rgba(2, 132, 199, .3);
+        box-shadow: 0 3px 8px rgba(16, 185, 129, .35);
     }
     .reset-btn {
         background: #f1f5f9;
@@ -137,15 +224,15 @@
         transition: all .15s ease;
     }
     .section-tab:hover {
-        background: #e0f2fe;
-        border-color: #7dd3fc;
-        color: #0369a1;
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+        color: #047857;
     }
     .section-tab.active {
-        background: #0284c7;
+        background: #10b981;
         color: #ffffff;
-        border-color: #0284c7;
-        box-shadow: 0 2px 6px rgba(2, 132, 199, .25);
+        border-color: #10b981;
+        box-shadow: 0 2px 6px rgba(16, 185, 129, .25);
     }
     .info-panel {
         background: var(--card-bg);
@@ -233,9 +320,9 @@
         width: 56px;
         height: 56px;
         border-radius: 50%;
-        background: #e0f2fe;
-        color: #0284c7;
-        border: 1px solid #bae6fd;
+        background: #ecfdf5;
+        color: #10b981;
+        border: 1px solid #a7f3d0;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -392,33 +479,74 @@
         <form method="GET" action="{{ $analysisRoute }}">
             <div class="filter-grid">
                 <div class="field">
-                    <label for="indikator">Indikator</label>
-                    <select id="indikator" name="indikator">
-                        <option value="">Pilih Indikator</option>
-                        @foreach ($allIndikators as $indikator)
-                            <option value="{{ $indikator->id }}" @selected((int) ($selectedIndikator?->id ?? 0) === (int) $indikator->id)>
-                                {{ $indikator->nama_indikator }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <label for="filter-indikator-analisis">Indikator</label>
+                    <input type="hidden" name="indikator" id="filter-indikator-analisis" value="{{ $selectedIndikator?->id }}">
+                    <div class="custom-select-container is-indikator" id="analisis-indikator-dropdown">
+                        <button type="button" class="custom-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                            <span class="custom-select-label">{{ $selectedIndikator?->nama_indikator ?? 'Pilih Indikator' }}</span>
+                            <i class="bi bi-chevron-down custom-select-arrow"></i>
+                        </button>
+                        <div class="custom-select-menu" role="listbox">
+                            <div class="custom-select-search">
+                                <i class="bi bi-search"></i>
+                                <input type="text" class="custom-select-search-input" placeholder="Cari indikator..." autocomplete="off">
+                            </div>
+                            <div class="custom-select-options">
+                                <button type="button" class="custom-select-option {{ !$selectedIndikator ? 'is-selected' : '' }}" data-value="" data-label="Pilih Indikator">
+                                    <span>Pilih Indikator</span>
+                                    @if(!$selectedIndikator) <i class="bi bi-check2 check-icon"></i> @endif
+                                </button>
+                                @foreach ($allIndikators as $indikator)
+                                    <button type="button" class="custom-select-option {{ (int) ($selectedIndikator?->id ?? 0) === (int) $indikator->id ? 'is-selected' : '' }}" data-value="{{ $indikator->id }}" data-label="{{ $indikator->nama_indikator }}">
+                                        <span>{{ $indikator->nama_indikator }}</span>
+                                        @if((int) ($selectedIndikator?->id ?? 0) === (int) $indikator->id) <i class="bi bi-check2 check-icon"></i> @endif
+                                    </button>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="field">
-                    <label for="tahun_mulai">Tahun Mulai</label>
-                    <select id="tahun_mulai" name="tahun_mulai">
-                        @foreach ($years as $year)
-                            <option value="{{ $year }}" @selected((int) $tahunMulai === (int) $year)>{{ $year }}</option>
-                        @endforeach
-                    </select>
+                    <label for="filter-tahun-mulai">Tahun Mulai</label>
+                    <input type="hidden" name="tahun_mulai" id="filter-tahun-mulai" value="{{ $tahunMulai }}">
+                    <div class="custom-select-container" id="analisis-tahun-mulai-dropdown">
+                        <button type="button" class="custom-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                            <span class="custom-select-label">{{ $tahunMulai }}</span>
+                            <i class="bi bi-chevron-down custom-select-arrow"></i>
+                        </button>
+                        <div class="custom-select-menu" role="listbox">
+                            <div class="custom-select-options">
+                                @foreach ($years as $year)
+                                    <button type="button" class="custom-select-option {{ (int) $tahunMulai === (int) $year ? 'is-selected' : '' }}" data-value="{{ $year }}">
+                                        <span>{{ $year }}</span>
+                                        @if((int) $tahunMulai === (int) $year) <i class="bi bi-check2 check-icon"></i> @endif
+                                    </button>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="field">
-                    <label for="tahun_akhir">Tahun Akhir</label>
-                    <select id="tahun_akhir" name="tahun_akhir">
-                        @foreach ($years as $year)
-                            <option value="{{ $year }}" @selected((int) $tahunAkhir === (int) $year)>{{ $year }}</option>
-                        @endforeach
-                    </select>
+                    <label for="filter-tahun-akhir">Tahun Akhir</label>
+                    <input type="hidden" name="tahun_akhir" id="filter-tahun-akhir" value="{{ $tahunAkhir }}">
+                    <div class="custom-select-container" id="analisis-tahun-akhir-dropdown">
+                        <button type="button" class="custom-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                            <span class="custom-select-label">{{ $tahunAkhir }}</span>
+                            <i class="bi bi-chevron-down custom-select-arrow"></i>
+                        </button>
+                        <div class="custom-select-menu" role="listbox">
+                            <div class="custom-select-options">
+                                @foreach ($years as $year)
+                                    <button type="button" class="custom-select-option {{ (int) $tahunAkhir === (int) $year ? 'is-selected' : '' }}" data-value="{{ $year }}">
+                                        <span>{{ $year }}</span>
+                                        @if((int) $tahunAkhir === (int) $year) <i class="bi bi-check2 check-icon"></i> @endif
+                                    </button>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="field filter-actions">
@@ -499,7 +627,7 @@
             </div>
             <div class="stat-card muted">
                 <span class="label">Tren Pertumbuhan</span>
-                <span class="value">{{ $growthData['average'] !== null ? number_format((float) $growthData['average'], 2, ',', '.') . '%' : '-' }}</span>
+                <span class="value">{{ $growthData['average'] !== null ? number_format((float) $growthData['average'], 2, ',', '.') . ($growthData['unit'] ?? '%') : '-' }}</span>
                 <span class="meta"><span class="badge-status {{ ($growthData['trend'] ?? 'Stabil') === 'Meningkat' ? 'badge-up' : (($growthData['trend'] ?? 'Stabil') === 'Menurun' ? 'badge-down' : 'badge-stable') }}">{{ $growthData['trend'] ?? 'Stabil' }}</span></span>
             </div>
             <div class="stat-card muted">
@@ -546,7 +674,7 @@
             <div class="stats-grid" style="margin-top: 18px; margin-bottom: 0;">
                 <div class="stat-card muted">
                     <span class="label">Rata-rata Pertumbuhan</span>
-                    <span class="value">{{ $growthData['average'] !== null ? number_format((float) $growthData['average'], 2, ',', '.') . '%' : '-' }}</span>
+                    <span class="value">{{ $growthData['average'] !== null ? number_format((float) $growthData['average'], 2, ',', '.') . ($growthData['unit'] ?? '%') : '-' }}</span>
                     <span class="meta">Berdasarkan seluruh tahun yang valid</span>
                 </div>
                 <div class="stat-card muted">
@@ -556,12 +684,12 @@
                 </div>
                 <div class="stat-card muted">
                     <span class="label">Pertumbuhan Tertinggi</span>
-                    <span class="value">{{ $growthData['highest'] !== null ? number_format((float) $growthData['highest'], 2, ',', '.') . '%' : '-' }}</span>
+                    <span class="value">{{ $growthData['highest'] !== null ? number_format((float) $growthData['highest'], 2, ',', '.') . ($growthData['unit'] ?? '%') : '-' }}</span>
                     <span class="meta">{{ $growthData['highestYear'] ? 'Tahun ' . $growthData['highestYear'] : '-' }}</span>
                 </div>
                 <div class="stat-card muted">
                     <span class="label">Pertumbuhan Terendah</span>
-                    <span class="value">{{ $growthData['lowest'] !== null ? number_format((float) $growthData['lowest'], 2, ',', '.') . '%' : '-' }}</span>
+                    <span class="value">{{ $growthData['lowest'] !== null ? number_format((float) $growthData['lowest'], 2, ',', '.') . ($growthData['unit'] ?? '%') : '-' }}</span>
                     <span class="meta">{{ $growthData['lowestYear'] ? 'Tahun ' . $growthData['lowestYear'] : '-' }}</span>
                 </div>
             </div>
@@ -578,8 +706,8 @@
                             <th class="numeric">Capaian</th>
                             <th class="numeric">Perubahan</th>
                             <th class="numeric">
-                                <span class="th-full">Pertumbuhan (%)</span>
-                                <span class="th-compact">% Tumbuh</span>
+                                <span class="th-full">Pertumbuhan ({{ $growthData['unit'] ?? '%' }})</span>
+                                <span class="th-compact">{{ $growthData['unit'] ?? '%' }}</span>
                             </th>
                             <th>Status</th>
                         </tr>
@@ -590,7 +718,7 @@
                                 <td>{{ $row['tahun'] }}</td>
                                 <td class="numeric">{{ $row['capaian'] !== null ? number_format((float) $row['capaian'], 2, ',', '.') : '-' }}</td>
                                 <td class="numeric">{{ $row['perubahan'] !== null ? number_format((float) $row['perubahan'], 2, ',', '.') : '-' }}</td>
-                                <td class="numeric">{{ $row['pertumbuhan'] !== null ? number_format((float) $row['pertumbuhan'], 2, ',', '.') . '%' : '-' }}</td>
+                                <td class="numeric">{{ $row['pertumbuhan'] !== null ? number_format((float) $row['pertumbuhan'], 2, ',', '.') . ($growthData['unit'] ?? '%') : '-' }}</td>
                                 <td>
                                     @php
                                         $growthStatus = 'Aktual';
@@ -630,7 +758,7 @@
                 </div>
                 <div class="stat-card muted">
                     <span class="label">Pertumbuhan Proyeksi</span>
-                    <span class="value">{{ $projectionData['summary']['growth'] !== null ? number_format((float) $projectionData['summary']['growth'], 2, ',', '.') . '%' : '-' }}</span>
+                    <span class="value">{{ $projectionData['summary']['growth'] !== null ? number_format((float) $projectionData['summary']['growth'], 2, ',', '.') . ($projectionData['unit'] ?? '%') : '-' }}</span>
                     <span class="meta">{{ $projectionData['summary']['status'] ?? 'Proyeksi' }}</span>
                 </div>
             </div>
@@ -650,8 +778,8 @@
                                 </th>
                                 <th class="numeric">Perubahan</th>
                                 <th class="numeric">
-                                    <span class="th-full">Pertumbuhan (%)</span>
-                                    <span class="th-compact">% Tumbuh</span>
+                                    <span class="th-full">Pertumbuhan ({{ $projectionData['unit'] ?? '%' }})</span>
+                                    <span class="th-compact">{{ $projectionData['unit'] ?? '%' }}</span>
                                 </th>
                                 <th>Status</th>
                             </tr>
@@ -662,7 +790,7 @@
                                     <td>{{ $projection['tahun'] }}</td>
                                     <td class="numeric">{{ number_format((float) $projection['nilai'], 2, ',', '.') }}</td>
                                     <td class="numeric">{{ $projection['perubahan'] !== null ? number_format((float) $projection['perubahan'], 2, ',', '.') : '-' }}</td>
-                                    <td class="numeric">{{ $projection['pertumbuhan'] !== null ? number_format((float) $projection['pertumbuhan'], 2, ',', '.') . '%' : '-' }}</td>
+                                    <td class="numeric">{{ $projection['pertumbuhan'] !== null ? number_format((float) $projection['pertumbuhan'], 2, ',', '.') . ($projectionData['unit'] ?? '%') : '-' }}</td>
                                     <td>
                                         <span class="badge-status {{ $projection['status'] === 'Target tercapai' ? 'badge-up' : ($projection['status'] === 'Di bawah target' ? 'badge-down' : 'badge-stable') }}">{{ $projection['status'] ?: 'Proyeksi' }}</span>
                                     </td>
@@ -817,8 +945,8 @@
                     {
                         label: 'Capaian',
                         data: capaianData,
-                        borderColor: '#87CEEB',
-                        backgroundColor: 'rgba(135, 206, 235, 0.12)',
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.10)',
                         fill: true,
                         tension: 0.3,
                         spanGaps: true,
@@ -857,23 +985,36 @@
 
     const growthLabels = @json($growthData['chartLabels'] ?? []);
     const growthValues = @json($growthData['chartValues'] ?? []);
+    const growthUnit = @json($growthData['unit'] ?? '%');
     if (growthLabels.length && document.getElementById('growthChart')) {
+        const validGrowths = growthValues.filter(v => v !== null && !isNaN(v));
+        let yMin = -1;
+        let yMax = 1;
+        if (validGrowths.length) {
+            const minG = Math.min(0, ...validGrowths);
+            const maxG = Math.max(0, ...validGrowths);
+            const diff = maxG - minG;
+            const padding = diff > 0 ? Math.max(diff * 0.15, 0.5) : 0.5;
+            yMin = minG < 0 ? minG - padding : -padding * 0.5;
+            yMax = maxG + padding;
+        }
+
         new Chart(document.getElementById('growthChart'), {
             type: 'line',
             data: {
                 labels: growthLabels,
                 datasets: [{
-                    label: 'Pertumbuhan (%)',
+                    label: 'Pertumbuhan (' + growthUnit + ')',
                     data: growthValues,
-                    borderColor: '#1f8b5d',
-                    backgroundColor: 'rgba(31, 139, 93, 0.18)',
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.18)',
                     borderWidth: 2,
                     fill: false,
                     tension: 0.25,
                     spanGaps: true,
                     pointRadius: 4,
                 }, {
-                    label: 'Referensi 0%',
+                    label: 'Referensi 0' + growthUnit,
                     data: growthLabels.map(() => 0),
                     borderColor: '#c5ccd6',
                     borderDash: [5, 5],
@@ -890,14 +1031,24 @@
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return context.dataset.label + ': ' + (context.parsed.y ?? 0).toFixed(2) + '%';
+                                const val = context.parsed.y ?? 0;
+                                return context.dataset.label + ': ' + Number(val).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + growthUnit;
                             }
                         }
                     }
                 },
                 scales: {
                     x: { title: { display: true, text: 'Tahun' } },
-                    y: { title: { display: true, text: 'Pertumbuhan (%)' }, suggestedMin: Math.min(0, ...growthValues, -10), suggestedMax: Math.max(0, ...growthValues, 10) }
+                    y: {
+                        title: { display: true, text: 'Pertumbuhan (' + growthUnit + ')' },
+                        suggestedMin: yMin,
+                        suggestedMax: yMax,
+                        ticks: {
+                            callback: function(value) {
+                                return Number(value).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + growthUnit;
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -930,8 +1081,8 @@
                     {
                         label: 'Capaian',
                         data: projectionActual,
-                        borderColor: '#87CEEB',
-                        backgroundColor: 'rgba(135, 206, 235, 0.12)',
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.10)',
                         fill: false,
                         tension: 0.25,
                         spanGaps: true,
@@ -948,10 +1099,10 @@
                     {
                         label: 'Proyeksi',
                         data: projectionSeries,
-                        borderColor: '#1f8b5d',
-                        backgroundColor: '#1f8b5d',
+                        borderColor: '#059669',
+                        backgroundColor: '#059669',
                         pointBackgroundColor: '#ffffff',
-                        pointBorderColor: '#1f8b5d',
+                        pointBorderColor: '#059669',
                         pointRadius: 4,
                         borderWidth: 2.5,
                         borderDash: [6, 6],
@@ -986,5 +1137,84 @@
             plugins: [projectionZonePlugin]
         });
     }
+
+    // Handler Custom Dropdown Analisis
+    const initAnalisisSelect = (containerId, inputId) => {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const trigger = container.querySelector('.custom-select-trigger');
+        const triggerLabel = trigger.querySelector('.custom-select-label');
+        const hiddenInput = document.getElementById(inputId);
+        const searchInput = container.querySelector('.custom-select-search-input');
+        const options = container.querySelectorAll('.custom-select-option');
+
+        const toggle = (open) => {
+            const isOpen = open ?? !container.classList.contains('is-open');
+            if (isOpen) {
+                document.querySelectorAll('.custom-select-container.is-open').forEach(el => {
+                    if (el !== container) el.classList.remove('is-open');
+                });
+            }
+            container.classList.toggle('is-open', isOpen);
+            trigger.setAttribute('aria-expanded', String(isOpen));
+            if (isOpen && searchInput) {
+                searchInput.value = '';
+                options.forEach(opt => opt.style.display = 'flex');
+                setTimeout(() => searchInput.focus(), 50);
+            }
+        };
+
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggle();
+        });
+
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const q = e.target.value.toLowerCase().trim();
+                options.forEach(opt => {
+                    const label = (opt.getAttribute('data-label') || opt.textContent).toLowerCase();
+                    opt.style.display = label.includes(q) ? 'flex' : 'none';
+                });
+            });
+            searchInput.addEventListener('click', (e) => e.stopPropagation());
+        }
+
+        options.forEach((opt) => {
+            opt.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const val = opt.getAttribute('data-value');
+                hiddenInput.value = val;
+                triggerLabel.textContent = opt.getAttribute('data-label') || opt.querySelector('span').textContent;
+                
+                options.forEach(o => {
+                    o.classList.remove('is-selected');
+                    const existingCheck = o.querySelector('.check-icon');
+                    if (existingCheck) existingCheck.remove();
+                });
+                opt.classList.add('is-selected');
+                const check = document.createElement('i');
+                check.className = 'bi bi-check2 check-icon';
+                opt.appendChild(check);
+
+                toggle(false);
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!container.contains(e.target)) toggle(false);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && container.classList.contains('is-open')) {
+                toggle(false);
+                trigger.focus();
+            }
+        });
+    };
+
+    initAnalisisSelect('analisis-indikator-dropdown', 'filter-indikator-analisis');
+    initAnalisisSelect('analisis-tahun-mulai-dropdown', 'filter-tahun-mulai');
+    initAnalisisSelect('analisis-tahun-akhir-dropdown', 'filter-tahun-akhir');
 </script>
 @endsection

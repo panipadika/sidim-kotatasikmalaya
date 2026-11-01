@@ -6,7 +6,7 @@
 <style>
     .detail-page { width: 100%; min-width: 0; overflow: auto; padding-bottom: 16px; }
     .detail-head {
-        background: linear-gradient(110deg, #ffffff 0%, #f4faff 100%);
+        background: linear-gradient(110deg, #ffffff 0%, #f0f9f4 100%);
         border: 1px solid var(--border);
         border-radius: 12px;
         box-shadow: 0 4px 16px rgba(15, 39, 71, 0.05);
@@ -42,8 +42,8 @@
         letter-spacing: .03em;
     }
     .badge.utama { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
-    .badge.komponen { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
-    .badge.subindikator { background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; }
+    .badge.komponen { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+    .badge.subindikator { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
     .badge.parent { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; text-transform: none; }
 
     .detail-head-title h1 {
@@ -76,20 +76,21 @@
         letter-spacing: .04em;
         text-transform: uppercase;
     }
-    .select-wrapper {
+    .custom-select-container {
         position: relative;
-        display: inline-flex;
-        align-items: center;
+        display: inline-block;
+        min-width: 260px;
     }
-    .select-wrapper select {
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        min-width: 250px;
+    .custom-select-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
         height: 38px;
         border: 1px solid #d8e2ee;
         border-radius: 8px;
-        padding: 0 34px 0 12px;
+        padding: 0 12px;
         background: #ffffff;
         color: var(--text-main);
         font: inherit;
@@ -97,19 +98,107 @@
         font-weight: 600;
         box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
         cursor: pointer;
+        text-align: left;
         transition: border-color .15s ease, box-shadow .15s ease;
     }
-    .select-wrapper select:focus {
+    .custom-select-trigger:focus, .custom-select-container.is-open .custom-select-trigger {
         outline: 0;
-        border-color: #38bdf8;
-        box-shadow: 0 0 0 3px rgba(14, 165, 233, .14);
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, .16);
     }
-    .select-arrow {
-        position: absolute;
-        right: 12px;
-        pointer-events: none;
+    .custom-select-label {
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .custom-select-arrow {
         font-size: .68rem;
         color: #64748b;
+        transition: transform .2s ease;
+        flex-shrink: 0;
+    }
+    .custom-select-container.is-open .custom-select-arrow {
+        transform: rotate(180deg);
+        color: #10b981;
+    }
+    .custom-select-menu {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        min-width: 280px;
+        max-height: 320px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        box-shadow: 0 12px 30px rgba(15, 39, 71, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
+        z-index: 1000;
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    .custom-select-container.is-open .custom-select-menu {
+        display: flex;
+        animation: dropFade .15s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes dropFade {
+        from { opacity: 0; transform: translateY(-6px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .custom-select-search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-bottom: 1px solid #f1f5f9;
+        background: #f8fafc;
+    }
+    .custom-select-search i {
+        color: #94a3b8;
+        font-size: .75rem;
+    }
+    .custom-select-search input {
+        border: 0;
+        outline: 0;
+        background: transparent;
+        font: inherit;
+        font-size: .78rem;
+        width: 100%;
+        color: var(--text-main);
+    }
+    .custom-select-options {
+        overflow-y: auto;
+        max-height: 260px;
+        padding: 4px;
+    }
+    .custom-select-option {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 8px 10px;
+        border-radius: 6px;
+        font-size: .78rem;
+        font-weight: 500;
+        color: var(--text-main);
+        text-decoration: none;
+        transition: background-color .12s ease, color .12s ease;
+    }
+    .custom-select-option:hover {
+        background-color: #ecfdf5;
+        color: #065f46;
+    }
+    .custom-select-option.is-selected {
+        background-color: #d1fae5;
+        color: #065f46;
+        font-weight: 700;
+    }
+    .custom-select-option .check-icon {
+        color: #10b981;
+        font-size: .9rem;
+        font-weight: 700;
+        flex-shrink: 0;
     }
     .action-group {
         display: flex;
@@ -123,22 +212,22 @@
         height: 38px;
         padding: 0 14px;
         border-radius: 8px;
-        background: #f0f7ff;
-        color: #0284c7;
+        background: #ecfdf5;
+        color: #10b981;
         font-size: .8rem;
         font-weight: 700;
         text-decoration: none;
         white-space: nowrap;
-        border: 1px solid #bae6fd;
+        border: 1px solid #a7f3d0;
         box-shadow: 0 1px 2px rgba(15, 39, 71, 0.04);
         transition: all .15s ease;
     }
     .head-btn:hover {
-        background: #0284c7;
-        border-color: #0284c7;
+        background: #10b981;
+        border-color: #10b981;
         color: #ffffff;
         transform: translateY(-1px);
-        box-shadow: 0 3px 6px rgba(2, 132, 199, .18);
+        box-shadow: 0 3px 6px rgba(16, 185, 129, .25);
     }
 
     .info-grid {
@@ -190,7 +279,7 @@
         margin: 0 0 12px;
         padding: 10px 14px;
         border: 1px solid #edf2f7;
-        border-left: 4px solid #0284c7;
+        border-left: 4px solid #10b981;
         background: #f8fafc;
         color: #475569;
         font-size: .78rem;
@@ -201,7 +290,7 @@
     .card-heading {
         padding: 12px 16px;
         border-bottom: 1px solid #edf1f5;
-        background: linear-gradient(110deg, #fffdf8 0%, #f9fcff 100%);
+        background: linear-gradient(110deg, #fffdf8 0%, #f0f9f4 100%);
         border-top-left-radius: 9px;
         border-top-right-radius: 9px;
     }
@@ -267,8 +356,9 @@
         .detail-head-inner { flex-direction: column; align-items: stretch; gap: 12px; }
         .detail-head-controls { width: 100%; flex-direction: column; align-items: stretch; gap: 8px; }
         .control-group { width: 100%; }
-        .select-wrapper { width: 100%; }
-        .select-wrapper select { width: 100%; min-width: 0; }
+        .custom-select-container { width: 100%; }
+        .custom-select-trigger { width: 100%; min-width: 0; }
+        .custom-select-menu { width: 100%; min-width: 0; }
         .head-btn { width: 100%; justify-content: center; height: 40px; }
         .info-grid { grid-template-columns: repeat(2, 1fr); }
     }
@@ -277,9 +367,9 @@
         .detail-head { padding: 12px 14px; border-radius: 12px; }
         .detail-head-title h1 { font-size: 1.15rem; line-height: 1.25; }
         .detail-head-title p { font-size: 0.74rem; }
-        .select-wrapper select {
+        .custom-select-trigger {
             height: 42px;
-            font-size: 16px; /* Mencegah auto-zoom di iOS Safari */
+            font-size: 14px;
             border-radius: 9px;
         }
         .head-btn {
@@ -373,14 +463,32 @@
 
             <div class="detail-head-controls">
                 <div class="control-group">
-                    <label for="indikator-select">Pilih Indikator</label>
-                    <div class="select-wrapper">
-                        <select id="indikator-select" onchange="window.location.href = this.value">
-                            @foreach($allIndicators as $item)
-                                <option value="{{ $isPublicUser ? route('public.indikator.show', $item) : route('indikator.show', $item) }}" {{ $item->id == $indikator->id ? 'selected' : '' }}>{{ $item->nama_indikator }}</option>
-                            @endforeach
-                        </select>
-                        <i class="bi bi-chevron-down select-arrow"></i>
+                    <label id="indikator-dropdown-label">Pilih Indikator</label>
+                    <div class="custom-select-container" id="customIndicatorSelect">
+                        <button type="button" class="custom-select-trigger" aria-haspopup="listbox" aria-expanded="false" id="indicatorTriggerBtn">
+                            <span class="custom-select-label">{{ $indikator->nama_indikator }}</span>
+                            <i class="bi bi-chevron-down custom-select-arrow"></i>
+                        </button>
+                        <div class="custom-select-menu" role="listbox" aria-labelledby="indikator-dropdown-label">
+                            <div class="custom-select-search">
+                                <i class="bi bi-search"></i>
+                                <input type="text" id="indicatorSearchInput" placeholder="Cari indikator..." autocomplete="off">
+                            </div>
+                            <div class="custom-select-options">
+                                @foreach($allIndicators as $item)
+                                    @php
+                                        $itemUrl = $isPublicUser ? route('public.indikator.show', $item) : route('indikator.show', $item);
+                                        $isSelected = ($item->id == $indikator->id);
+                                    @endphp
+                                    <a href="{{ $itemUrl }}" class="custom-select-option {{ $isSelected ? 'is-selected' : '' }}" role="option" aria-selected="{{ $isSelected ? 'true' : 'false' }}">
+                                        <span>{{ $item->nama_indikator }}</span>
+                                        @if($isSelected)
+                                            <i class="bi bi-check2 check-icon"></i>
+                                        @endif
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -460,7 +568,7 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td class="numeric">{{ $item['capaian']->tahun }}</td>
-                            <td class="numeric" style="color: #0284c7;">{{ $item['capaian']->nilai !== null ? number_format((float) round($item['capaian']->nilai, 2), 2, ',', '.') : '-' }}</td>
+                            <td class="numeric" style="color: #10b981; font-weight: 700;">{{ $item['capaian']->nilai !== null ? number_format((float) round($item['capaian']->nilai, 2), 2, ',', '.') : '-' }}</td>
                             <td class="numeric" style="color: #d97706;">{{ $item['target']?->nilai_target_range ?? ($item['target']?->nilai_target !== null ? number_format((float) round($item['target']->nilai_target, 2), 2, ',', '.') : '-') }}</td>
                             <td>{{ $indikator->satuan ?? '-' }}</td>
                         </tr>
@@ -521,12 +629,12 @@
                 {
                     label: 'Capaian',
                     data: {{ Js::from($capaianData) }},
-                    borderColor: '#0284c7',
-                    backgroundColor: 'rgba(2, 132, 199, .08)',
-                    pointBackgroundColor: '#0284c7',
-                    pointRadius: 3,
-                    pointHoverRadius: 5,
-                    borderWidth: 2,
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, .10)',
+                    pointBackgroundColor: '#10b981',
+                    pointRadius: 3.5,
+                    pointHoverRadius: 6,
+                    borderWidth: 2.5,
                     tension: .3,
                     fill: true,
                     spanGaps: false
@@ -585,4 +693,49 @@
     });
 </script>
 @endif
+
+<script>
+    (() => {
+        const container = document.getElementById('customIndicatorSelect');
+        if (!container) return;
+        const trigger = container.querySelector('.custom-select-trigger');
+        const searchInput = container.querySelector('#indicatorSearchInput');
+        const options = container.querySelectorAll('.custom-select-option');
+
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = container.classList.toggle('is-open');
+            trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            if (isOpen && searchInput) {
+                setTimeout(() => searchInput.focus(), 50);
+            }
+        });
+
+        if (searchInput) {
+            searchInput.addEventListener('click', (e) => e.stopPropagation());
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase().trim();
+                options.forEach(opt => {
+                    const text = opt.textContent.toLowerCase();
+                    opt.style.display = text.includes(term) ? 'flex' : 'none';
+                });
+            });
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!container.contains(e.target)) {
+                container.classList.remove('is-open');
+                trigger.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && container.classList.contains('is-open')) {
+                container.classList.remove('is-open');
+                trigger.setAttribute('aria-expanded', 'false');
+                trigger.focus();
+            }
+        });
+    })();
+</script>
 @endsection

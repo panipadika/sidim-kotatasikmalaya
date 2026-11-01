@@ -414,8 +414,9 @@
         .topbar-badge {
             padding: 5px 10px;
             border-radius: 999px;
-            background: #eaf3ff;
-            color: var(--sidebar-bg-2);
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #047857;
             font-size: 0.72rem;
             font-weight: 700;
             letter-spacing: 0.04em;
@@ -694,6 +695,174 @@
                 color: #0f6b4d;
                 transform: translateY(-1px);
             }
+        }
+
+        /* Custom Form Select Component (Replaces native OS select with Green Theme dropdown) */
+        @keyframes dropFade {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .form-custom-select {
+            position: relative;
+            width: 100%;
+        }
+        .form-custom-select-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            width: 100%;
+            min-height: 42px;
+            border: 1px solid #d8e2ee;
+            border-radius: 9px;
+            padding: 10px 12px;
+            background: #fbfdff;
+            color: var(--text-main);
+            font: inherit;
+            font-size: .86rem;
+            cursor: pointer;
+            text-align: left;
+            transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+        }
+        .form-custom-select-trigger:hover {
+            background: #ffffff;
+            border-color: #cbd5e1;
+        }
+        .form-custom-select-trigger:focus,
+        .form-custom-select.is-open .form-custom-select-trigger {
+            outline: 0;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, .15);
+            background: #fff;
+        }
+        .form-custom-select-trigger.is-invalid {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, .15) !important;
+        }
+        .form-custom-select-label {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .form-custom-select-arrow {
+            font-size: .72rem;
+            color: #64748b;
+            transition: transform .2s ease;
+            flex-shrink: 0;
+        }
+        .form-custom-select.is-open .form-custom-select-arrow {
+            transform: rotate(180deg);
+            color: #10b981;
+        }
+        .form-custom-select-menu {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            max-height: 240px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 9px;
+            box-shadow: 0 12px 30px rgba(15, 39, 71, 0.14), 0 2px 6px rgba(0, 0, 0, 0.04);
+            z-index: 1060;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .form-custom-select.is-open .form-custom-select-menu {
+            display: flex;
+            animation: dropFade .15s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .form-custom-select-menu.opens-up {
+            top: auto;
+            bottom: calc(100% + 4px);
+            box-shadow: 0 -12px 30px rgba(15, 39, 71, 0.14), 0 -2px 6px rgba(0, 0, 0, 0.04);
+        }
+        .form-custom-select-search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-bottom: 1px solid #f1f5f9;
+            background: #f8fafc;
+            transition: background .15s ease, border-color .15s ease;
+        }
+        .form-custom-select-search:focus-within {
+            background: #ffffff;
+            border-bottom-color: #10b981;
+        }
+        .form-custom-select-search i {
+            color: #94a3b8;
+            font-size: .78rem;
+            flex-shrink: 0;
+            transition: color .15s ease;
+        }
+        .form-custom-select-search:focus-within i {
+            color: #10b981;
+        }
+        .form-custom-select-search input,
+        .form-grid .form-custom-select-search input,
+        .field .form-custom-select-search input {
+            flex: 1 1 auto !important;
+            width: 100% !important;
+            height: 28px !important;
+            min-height: unset !important;
+            border: 0 !important;
+            outline: 0 !important;
+            background: transparent !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            box-shadow: none !important;
+            color: var(--text-main) !important;
+            font: inherit !important;
+            font-size: .82rem !important;
+            white-space: normal !important;
+        }
+        .form-custom-select-search input:focus,
+        .form-grid .form-custom-select-search input:focus,
+        .field .form-custom-select-search input:focus {
+            outline: 0 !important;
+            border: 0 !important;
+            box-shadow: none !important;
+            background: transparent !important;
+        }
+        .form-custom-select-options {
+            overflow-y: auto;
+            max-height: 195px;
+            padding: 4px;
+        }
+        .form-custom-select-option {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 8px 10px;
+            border: 0;
+            border-radius: 6px;
+            background: transparent;
+            font: inherit;
+            font-size: .83rem;
+            font-weight: 500;
+            color: var(--text-main);
+            cursor: pointer;
+            text-align: left;
+            transition: background-color .12s ease, color .12s ease;
+        }
+        .form-custom-select-option:hover {
+            background-color: #ecfdf5;
+            color: #065f46;
+        }
+        .form-custom-select-option.is-selected {
+            background-color: #d1fae5;
+            color: #065f46;
+            font-weight: 700;
+        }
+        .form-custom-select-option .check-icon {
+            color: #10b981;
+            font-size: .9rem;
+            flex-shrink: 0;
         }
     </style>
 </head>
@@ -977,6 +1146,197 @@
                 setTimeout(() => sidebarBackdrop.classList.remove('active'), 250);
             });
         }
+
+        // Setup Custom Form Select for any select inside .form-grid or .field
+        function setupCustomFormSelect(select) {
+            if (!select || select.dataset.customized === 'true') return;
+            if (select.closest('.filters') || select.classList.contains('per-page-select') || select.classList.contains('no-custom-select')) return;
+            select.dataset.customized = 'true';
+
+            // Hide native select visually
+            select.style.position = 'absolute';
+            select.style.opacity = '0';
+            select.style.width = '1px';
+            select.style.height = '1px';
+            select.style.pointerEvents = 'none';
+            select.style.zIndex = '-1';
+            select.tabIndex = -1;
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'form-custom-select';
+
+            const trigger = document.createElement('button');
+            trigger.type = 'button';
+            trigger.className = 'form-custom-select-trigger';
+            trigger.setAttribute('aria-haspopup', 'listbox');
+            trigger.setAttribute('aria-expanded', 'false');
+
+            const labelSpan = document.createElement('span');
+            labelSpan.className = 'form-custom-select-label';
+
+            const arrowIcon = document.createElement('i');
+            arrowIcon.className = 'bi bi-chevron-down form-custom-select-arrow';
+
+            trigger.appendChild(labelSpan);
+            trigger.appendChild(arrowIcon);
+            wrapper.appendChild(trigger);
+
+            const menu = document.createElement('div');
+            menu.className = 'form-custom-select-menu';
+            menu.setAttribute('role', 'listbox');
+
+            const optionsCount = select.options.length;
+            const enableSearch = optionsCount > 6 || select.dataset.search === 'true';
+
+            let searchInput = null;
+            if (enableSearch) {
+                const searchBox = document.createElement('div');
+                searchBox.className = 'form-custom-select-search';
+                searchBox.innerHTML = '<i class="bi bi-search"></i><input type="text" placeholder="Cari..." autocomplete="off">';
+                searchInput = searchBox.querySelector('input');
+                menu.appendChild(searchBox);
+            }
+
+            const optionsContainer = document.createElement('div');
+            optionsContainer.className = 'form-custom-select-options';
+
+            const optionButtons = [];
+
+            const updateFromSelect = () => {
+                const selectedOpt = select.selectedOptions[0] || select.options[0];
+                labelSpan.textContent = selectedOpt ? selectedOpt.textContent.trim() : 'Pilih...';
+                optionButtons.forEach(btn => {
+                    const isMatch = btn.getAttribute('data-value') === (selectedOpt ? selectedOpt.value : '');
+                    btn.classList.toggle('is-selected', isMatch);
+                    let checkIcon = btn.querySelector('.check-icon');
+                    if (isMatch) {
+                        if (!checkIcon) {
+                            checkIcon = document.createElement('i');
+                            checkIcon.className = 'bi bi-check2 check-icon';
+                            btn.appendChild(checkIcon);
+                        }
+                    } else if (checkIcon) {
+                        checkIcon.remove();
+                    }
+                });
+            };
+
+            Array.from(select.options).forEach(opt => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'form-custom-select-option';
+                btn.setAttribute('data-value', opt.value);
+                btn.setAttribute('data-label', opt.textContent.trim());
+
+                Array.from(opt.attributes).forEach(attr => {
+                    if (attr.name.startsWith('data-')) {
+                        btn.setAttribute(attr.name, attr.value);
+                    }
+                });
+
+                const span = document.createElement('span');
+                span.textContent = opt.textContent.trim();
+                btn.appendChild(span);
+
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    select.value = opt.value;
+                    trigger.classList.remove('is-invalid');
+                    select.dispatchEvent(new Event('change', { bubbles: true }));
+                    updateFromSelect();
+                    toggle(false);
+                    trigger.focus();
+                });
+
+                optionsContainer.appendChild(btn);
+                optionButtons.push(btn);
+            });
+
+            menu.appendChild(optionsContainer);
+            wrapper.appendChild(menu);
+
+            const toggle = (open) => {
+                const isOpen = open ?? !wrapper.classList.contains('is-open');
+                if (isOpen) {
+                    document.querySelectorAll('.form-custom-select.is-open, .custom-select-container.is-open').forEach(el => {
+                        if (el !== wrapper) el.classList.remove('is-open');
+                    });
+                    const rect = trigger.getBoundingClientRect();
+                    const spaceBelow = window.innerHeight - rect.bottom;
+                    if (spaceBelow < 250 && rect.top > 250) {
+                        menu.classList.add('opens-up');
+                    } else {
+                        menu.classList.remove('opens-up');
+                    }
+                }
+                wrapper.classList.toggle('is-open', isOpen);
+                trigger.setAttribute('aria-expanded', String(isOpen));
+                if (isOpen && searchInput) {
+                    searchInput.value = '';
+                    optionButtons.forEach(b => b.style.display = 'flex');
+                    setTimeout(() => searchInput.focus(), 50);
+                }
+            };
+
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggle();
+            });
+
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const q = e.target.value.toLowerCase().trim();
+                    optionButtons.forEach(btn => {
+                        const text = (btn.getAttribute('data-label') || '').toLowerCase();
+                        btn.style.display = text.includes(q) ? 'flex' : 'none';
+                    });
+                });
+                searchInput.addEventListener('click', (e) => e.stopPropagation());
+            }
+
+            document.addEventListener('click', (e) => {
+                if (!wrapper.contains(e.target)) toggle(false);
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && wrapper.classList.contains('is-open')) {
+                    toggle(false);
+                    trigger.focus();
+                }
+            });
+
+            select.addEventListener('change', updateFromSelect);
+
+            select.addEventListener('invalid', (e) => {
+                e.preventDefault();
+                trigger.focus();
+                trigger.classList.add('is-invalid');
+            });
+
+            const form = select.closest('form');
+            if (form) {
+                form.addEventListener('reset', () => setTimeout(() => updateFromSelect(), 10));
+            }
+
+            const fieldLabel = select.id ? document.querySelector('label[for="' + select.id + '"]') : select.closest('.field')?.querySelector('label');
+            if (fieldLabel) {
+                fieldLabel.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    trigger.focus();
+                    toggle();
+                });
+            }
+
+            select.parentNode.insertBefore(wrapper, select.nextSibling);
+            updateFromSelect();
+        }
+
+        function initAllFormCustomSelects(root = document) {
+            root.querySelectorAll('.form-grid select, .field select, select.custom-form-select').forEach(setupCustomFormSelect);
+        }
+
+        initAllFormCustomSelects();
+        document.addEventListener('DOMContentLoaded', () => initAllFormCustomSelects());
     </script>
 </body>
 </html>

@@ -15,6 +15,10 @@ class TargetController extends Controller
     {
         $query = Target::with('indikator');
 
+        if ($request->filled('indikator_id')) {
+            $query->where('indikator_id', $request->integer('indikator_id'));
+        }
+
         if ($request->filled('search')) {
             $search = $request->string('search')->toString();
             $query->whereHas('indikator', fn ($indicatorQuery) => $indicatorQuery->where('nama_indikator', 'like', "%{$search}%"));
@@ -33,7 +37,11 @@ class TargetController extends Controller
         $indikators = Indikator::orderBy('nama_indikator')->get();
         $years = \App\Models\Capaian::query()->distinct()->orderByDesc('tahun')->pluck('tahun');
 
-        return view('target.index', compact('targets', 'indikators', 'years'));
+        $defaultJenis = ['RPJMD', 'RKPD', 'RPJPD'];
+        $dbJenis = Target::distinct()->pluck('jenis_target')->filter()->all();
+        $allJenisTargets = array_values(array_unique(array_merge($defaultJenis, $dbJenis)));
+
+        return view('target.index', compact('targets', 'indikators', 'years', 'allJenisTargets'));
     }
 
     public function create(): View
@@ -78,9 +86,17 @@ class TargetController extends Controller
             ]);
         }
 
+        if ($request->input('jenis_target') === 'Lainnya') {
+            if (!$request->filled('jenis_target_custom')) {
+                $request->merge(['jenis_target' => '']);
+            } else {
+                $request->merge(['jenis_target' => trim($request->string('jenis_target_custom')->toString())]);
+            }
+        }
+
         $data = $request->validate([
             'indikator_id' => ['required', 'integer', 'exists:indikator,id'],
-            'jenis_target' => ['required', Rule::in(['RPJMD', 'RKPD', 'RPJPD'])],
+            'jenis_target' => ['required', 'string', 'max:50'],
             'periode' => ['required', 'string', 'max:100'],
             'tahun' => ['nullable', 'integer', 'min:2005', 'max:2100'],
             'nilai_target' => ['nullable', 'numeric'],
@@ -90,8 +106,8 @@ class TargetController extends Controller
         ], [
             'indikator_id.required' => 'Indikator wajib dipilih.',
             'indikator_id.exists' => 'Indikator tidak ditemukan.',
-            'jenis_target.required' => 'Jenis target wajib dipilih.',
-            'jenis_target.in' => 'Jenis target harus RPJMD, RKPD, atau RPJPD.',
+            'jenis_target.required' => 'Jenis target wajib dipilih atau diisi.',
+            'jenis_target.max' => 'Jenis target maksimal 50 karakter.',
             'periode.required' => 'Periode wajib diisi.',
             'tahun.min' => 'Tahun minimal 2005.',
             'tahun.max' => 'Tahun maksimal 2100.',

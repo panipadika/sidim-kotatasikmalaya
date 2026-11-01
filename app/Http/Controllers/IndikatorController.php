@@ -14,6 +14,10 @@ class IndikatorController extends Controller
     {
         $query = Indikator::with('parent')->withCount('children');
 
+        if ($request->filled('indikator_id')) {
+            $query->where('id', $request->integer('indikator_id'));
+        }
+
         if ($request->filled('search')) {
             $search = $request->string('search')->toString();
             $query->where('nama_indikator', 'like', "%{$search}%");
@@ -27,6 +31,7 @@ class IndikatorController extends Controller
         $indikators = $query->orderByRaw('COALESCE(parent_id, id), parent_id, nama_indikator')
             ->paginate($perPage)
             ->appends($request->query());
+        $allIndikators = Indikator::orderBy('nama_indikator')->get();
         $parentsQuery = Indikator::whereIn('jenis', ['utama', 'komponen']);
         if ($request->filled('search')) {
             $parentsQuery->where('nama_indikator', 'like', '%' . $request->string('search')->toString() . '%');
@@ -36,7 +41,7 @@ class IndikatorController extends Controller
         }
         $parents = $parentsQuery->orderBy('nama_indikator')->get();
 
-        return view('indikator.index', compact('indikators', 'parents'));
+        return view('indikator.index', compact('indikators', 'parents', 'allIndikators'));
     }
 
     public function create(): View
