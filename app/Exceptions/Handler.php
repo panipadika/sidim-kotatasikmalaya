@@ -51,6 +51,23 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $e)
     {
+        if ($e instanceof \Illuminate\Http\Exceptions\ThrottleRequestsException || ($e instanceof \Symfony\Component\HttpKernel\Exception\HttpException && $e->getStatusCode() === 429)) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Terlalu banyak percobaan. Silakan tunggu beberapa saat sebelum mencoba kembali.',
+                ], 429);
+            }
+
+            $seconds = method_exists($e, 'getHeaders') ? ($e->getHeaders()['Retry-After'] ?? null) : null;
+            $msg = $seconds
+                ? "Terlalu banyak percobaan. Silakan tunggu {$seconds} detik sebelum mencoba kembali."
+                : 'Terlalu banyak percobaan. Silakan tunggu 1 menit sebelum mencoba kembali.';
+
+            return redirect()->back()
+                ->withInput($request->except('password', 'password_confirmation', '_token'))
+                ->with('error', $msg);
+        }
+
         if ($e instanceof \Illuminate\Session\TokenMismatchException || ($e instanceof \Symfony\Component\HttpKernel\Exception\HttpException && $e->getStatusCode() === 419)) {
             if ($request->expectsJson()) {
                 return response()->json([

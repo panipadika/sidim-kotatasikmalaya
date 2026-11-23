@@ -20,15 +20,21 @@ $adminLoginPath = AdminLoginPathService::getPath();
 
 Route::middleware('guest:admin')->group(function () use ($adminLoginPath) {
     Route::get('/' . $adminLoginPath, [AdminAuthController::class, 'showLogin'])->name('login');
-    Route::post('/' . $adminLoginPath, [AdminAuthController::class, 'login'])->name('login.submit');
+    Route::post('/' . $adminLoginPath, [AdminAuthController::class, 'login'])
+        ->middleware('throttle:login')
+        ->name('login.submit');
 });
 
 Route::middleware('guest:web')->group(function () {
-    Route::post('/public/register', [PublicAuthController::class, 'register'])->name('public.register.submit');
+    Route::post('/public/register', [PublicAuthController::class, 'register'])
+        ->middleware('throttle:register')
+        ->name('public.register.submit');
 });
 
 Route::get('/public/login', [PublicAuthController::class, 'showLogin'])->name('public.login');
-Route::post('/public/login', [PublicAuthController::class, 'login'])->name('public.login.submit');
+Route::post('/public/login', [PublicAuthController::class, 'login'])
+    ->middleware('throttle:login')
+    ->name('public.login.submit');
 Route::get('/public/register', [PublicAuthController::class, 'showRegister'])->name('public.register');
 
 Route::middleware(['auth:admin'])->group(function () {

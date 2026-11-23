@@ -44,5 +44,20 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
+
+        // Anti Brute-Force pada Login (maksimal 5 percobaan per menit per akun, max 15 per IP)
+        RateLimiter::for('login', function (Request $request) {
+            $username = (string) $request->input('username', $request->input('email', ''));
+
+            return [
+                Limit::perMinute(5)->by($request->ip() . '|' . $username),
+                Limit::perMinute(15)->by($request->ip()),
+            ];
+        });
+
+        // Anti Spam pada Registrasi Akun Publik (maksimal 3 kali per menit per IP)
+        RateLimiter::for('register', function (Request $request) {
+            return Limit::perMinute(3)->by($request->ip());
+        });
     }
 }
